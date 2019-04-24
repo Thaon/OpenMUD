@@ -1,0 +1,30 @@
+{
+"rooms": [
+  {
+    "name": "City Hall",
+    "description": "The hall is a vast and empty room, filled with old unintellegible paper scraps and not much else.",
+    "north": null,
+    "east": null,
+    "south": "Main Street",
+    "west": null
+  },
+  {
+    "name": "Main Street",
+    "description": "Just in front of the city hall, a long road stretches from East to West, who knows where it could lead you...",
+    "north": "City Hall",
+    "east": null,
+    "south": null,
+    "west": null
+  }
+],
+"cards": [
+  {
+    "title": "Example card",
+    "content": "this is what is written on the first card"
+  },
+  {
+    "title": "Example card 2",
+    "content": "this is what is written on the second card"
+  }
+]
+}
