@@ -3,7 +3,7 @@ YUI().use("node", function(Y) {
     //init
     var serviceName = "test online console service";
     var userName = "";
-    var pasteBinLocation = null;
+    var world = null;
     var rooms = null;
     var cards = null;
     var room = null;
@@ -15,7 +15,7 @@ YUI().use("node", function(Y) {
     {
         socket = io();
         
-        socket.emit('new user', userName, pasteBinLocation);
+        socket.emit('new user', userName, world);
 
         socket.on("send rooms", function(SrvRooms)
         {
@@ -25,18 +25,18 @@ YUI().use("node", function(Y) {
             outputToConsoleColor("You just entered " + room.name, "white");
         });
 
-        socket.on('message', function(Srvdata, SrvRoom) {
-            if (SrvRoom == room.name || SrvRoom == "all")
+        socket.on('message', function(SrvWorld, Srvdata, SrvRoom) {
+            if (SrvWorld == world && (SrvRoom == room.name || SrvRoom == "all"))
                 outputToConsole(Srvdata);
         });
 
-        socket.on('message color', function(Srvdata, SrvRoom, SrvColor) {
-            if (SrvRoom == room.name || SrvRoom == "all")
+        socket.on('message color', function(SrvWorld, Srvdata, SrvRoom, SrvColor) {
+            if (SrvWorld == world && (SrvRoom == room.name || SrvRoom == "all"))
                 outputToConsoleColor(Srvdata, SrvColor);
         });
 
-        socket.on("break", function(SrvRoom){
-            if (SrvRoom == room.name || SrvRoom == "all")
+        socket.on("break", function(SrvWorld, SrvRoom){
+            if (SrvWorld == world && (SrvRoom == room.name || SrvRoom == "all"))
                 NewLine();
         });
 
@@ -55,7 +55,7 @@ YUI().use("node", function(Y) {
             {
                 if (userName == "")
                 {
-                    pasteBinLocation = args[0];
+                    world = args[0];
                     userName = args[1];
                     outputToConsole("Hello " + userName + ", welcome to " + serviceName + ", the world is being loaded, please be patient.");
                     InitOnline();
@@ -80,7 +80,7 @@ YUI().use("node", function(Y) {
                     switch (args[0])
                     {
                         case "area":
-                            socket.emit("command", {text: "describe area", metaData: null}, room);
+                            socket.emit("command", {text: "describe area", metaData: null}, world, room);
                         break;
                     }
                 }
@@ -98,7 +98,7 @@ YUI().use("node", function(Y) {
                 else
                 {
                     Travel(args[0]);
-                    socket.emit('command', {text: "travel", metaData: null}, room);
+                    socket.emit('command', {text: "travel", metaData: null}, world, room);
                 }
             }
         },
@@ -114,7 +114,7 @@ YUI().use("node", function(Y) {
                 else
                 {
                     var number = args[0];
-                    socket.emit('command', {text: "roll", metaData: [userName, number]}, room.name, number);
+                    socket.emit('command', {text: "roll", metaData: [userName, number]}, world, room.name);
                 }
             }
         },
@@ -130,7 +130,7 @@ YUI().use("node", function(Y) {
                 else
                 {
                     var card = cards[Math.floor(Math.random()*cards.length)];
-                    socket.emit('command', {text: "draw card", metaData: [userName, card]}, room.name);
+                    socket.emit('command', {text: "draw card", metaData: [userName, card]}, world, room.name);
                 }
             }
         },
@@ -138,9 +138,12 @@ YUI().use("node", function(Y) {
         {
             name: "help",
             handler: function() {
-                outputToConsoleColor("I swear I'll write a help section...", "cyan");
-                outputToConsoleColor("type login plus your name to login", "cyan");
-
+                outputToConsoleColor("Commands:", "cyan");
+                outputToConsoleColor("login + world ID + name, logs you into a world with the given name", "cyan");
+                outputToConsoleColor("travel + direction, travels in a direction", "cyan");
+                outputToConsoleColor("describe area, describes the area around you", "cyan");
+                outputToConsoleColor("roll + number, rolls a dice with that many faces", "cyan");
+                outputToConsoleColor("draw card, draws a card from the global deck for this world", "cyan");
             }
         }
     ];
@@ -162,7 +165,7 @@ YUI().use("node", function(Y) {
         }
 
         if (userName != "")
-            socket.emit('message', input, room.name);
+            socket.emit('message', input, world, room.name);
         else
             outputToConsole("you need to login first");
 

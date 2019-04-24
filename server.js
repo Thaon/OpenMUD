@@ -22,11 +22,11 @@ server.listen(PORT, function() {
 //server specific code
 var users = [];
 
-function DescribeRoom(room, socket)
+function DescribeRoom(world, room, socket)
 {
 	tUsers = [];
 	users.forEach(function(user){
-	    if (user.roomName == room.name)
+	    if (user.world == world && user.roomName == room.name)
 	    {
 	        tUsers.push(user);
 	    }
@@ -34,26 +34,26 @@ function DescribeRoom(room, socket)
 	socket.emit("room description", tUsers);
 }
 
-var SetUserRoomName = function(socketId, roomName)
+var SetUserRoomName = function(socketId, world, roomName)
 {
 	users.forEach(function(user){
-		if (user.id == socketId)
+		if (user.world == world && user.id == socketId)
 			user.roomName = roomName;
 	});
 }
 
-var SetUserRoom = function(socket, roomName)
+var SetUserRoom = function(world, socket, roomName)
 {
-	SetUserRoomName(socket.id, roomName);
-	socket.broadcast.emit("message color", "Somebody just entered the area...", roomName, "grey");
+	SetUserRoomName(socket.id, world, roomName);
+	socket.broadcast.emit("message color", world, "Somebody just entered the area...", roomName, "grey");
 }
 
 //cards
-var DrawCard = function(socket, userName, card, roomName)
+var DrawCard = function(socket, userName, card, world, roomName)
 {
-	io.sockets.emit("message color", userName + " just drew the " + card.title +" card, it reads:", roomName, "yellow");
-	io.sockets.emit("message color", card.content, roomName, "yellow");
-	io.sockets.emit("break", roomName);
+	io.sockets.emit("message color", world, userName + " just drew the " + card.title +" card, it reads:", roomName, "yellow");
+	io.sockets.emit("message color", world, card.content, roomName, "yellow");
+	io.sockets.emit("break", world, roomName);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------
@@ -72,19 +72,19 @@ io.on('connection', function(socket) {
 		    // data contains the raw paste
 		    var jsonData =JSON.parse(data);
 
-		    users.push({id: socket.id, name: userName, roomName: jsonData.rooms[0].name});
+		    users.push({id: socket.id, name: userName, roomName: jsonData.rooms[0].name, world: pastebinValue});
 		    socket.emit("send rooms", jsonData);
 
 		    //notify world
-		    socket.broadcast.emit('message', 'Hey, ' + userName + ' was just born in the world.', "all");
-		    socket.emit("break", "all");
+		    socket.broadcast.emit('message', pastebinValue, 'Hey, ' + userName + ' was just born in the world.', "all");
+		    socket.emit("break", pastebinValue, "all");
 
 		    //debug
 		    console.clear();
 		    console.log("now the following users are connected:");
 		    users.forEach(function(element)
 		    {
-		    	console.log(element.name + " - " + element.id);
+		    	console.log(element.name + " - " + element.id + " - " + element.world);
 		    });
 		  })
 		  .fail(function (err) {
@@ -93,48 +93,48 @@ io.on('connection', function(socket) {
 		  })
 	});
 
-	socket.on('message', function(message, roomName){
+	socket.on('message', function(message, world, roomName){
 		var user = null;
 		users.forEach(function(element)
 	    {
-	    	if (element.id == socket.id)
+	    	if (element.world == world && element.id == socket.id)
 	    	{
 	    		user = element;
 	    	}
 	    });
 	    if (user == null)
 	    	return;
-		io.sockets.emit('message', user.name + ' : ' + message, roomName);
+		io.sockets.emit('message', world, user.name + ' : ' + message, roomName);
 	});
 
-	socket.on('command', function(command, room){
+	socket.on('command', function(command, world, room){
 		switch(command.text)
 		{
 			case "describe area":
-				DescribeRoom(room, socket);
+				DescribeRoom(world, room, socket);
 			break;
 
 			case "travel":
-				SetUserRoom(socket, room.name);
+				SetUserRoom(world, socket, room.name);
 			break;
 
 			case "roll":
-				io.sockets.emit("message color", command.metaData[0] + " Rolled a d"+ command.metaData[1] +" with the result of: " + Math.round(Math.random() * parseInt(command.metaData[1]), 10), room, "yellow");
-				io.sockets.emit("break", room);
+				io.sockets.emit("message color", world, command.metaData[0] + " Rolled a d"+ command.metaData[1] +" with the result of: " + Math.round(Math.random() * parseInt(command.metaData[1]), 10), room, "yellow");
+				io.sockets.emit("break", world, room);
 			break;
 
 			case "draw card":
-				DrawCard(socket, command.metaData[0], command.metaData[1], room);
+				DrawCard(socket, command.metaData[0], command.metaData[1], world, room);
 			break;
 		}
 	});
 
-	socket.on('disconnect', function(){
-		console.log("Somebody disconnected: " + socket.id);
+	socket.on('disconnect', function(world){
+		console.log("Somebody disconnected: " + socket.id + " in world: " + world);
 		var tUser = null;
 		users.forEach(function(element)
 	    {
-	    	if (element.id == socket.id)
+	    	if (element.world == world && element.id == socket.id)
 	    	{
 	    		tUser = element;
 	    	}
@@ -147,7 +147,7 @@ io.on('connection', function(socket) {
 
 		var disconnectedUser = tUser.name;
 		users.pop(tUser);
-		io.sockets.emit('message color', disconnectedUser + " just left this world, what a pity", "all", "darkred");
+		io.sockets.emit('message color', world, disconnectedUser + " just left this world, what a pity", "all", "darkred");
 
 		//debug
 	    console.clear();
