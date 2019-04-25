@@ -30,6 +30,11 @@ YUI().use("node", function(Y) {
 
         socket.on("send rooms", function(SrvRooms)
         {
+            //init vars
+            rooms = SrvRooms.rooms;
+            cards = SrvRooms.cards;
+            room = rooms[0];
+
             //fetch messages
             serviceName = ReplaceStringVariables(SrvRooms.world_name);
             worldDescription = ReplaceStringVariables(SrvRooms.world_description);
@@ -43,9 +48,7 @@ YUI().use("node", function(Y) {
             cannotTravelMessage = ReplaceStringVariables(SrvRooms.cannot_travel_message);
             finishedTravellingMessage = ReplaceStringVariables(SrvRooms.finished_travelling_message);
 
-            rooms = SrvRooms.rooms;
-            cards = SrvRooms.cards;
-            room = rooms[0];
+            //notify player
             outputToConsole(loginMessage);
             outputToConsoleColor(enterRoomMessage);
         });
