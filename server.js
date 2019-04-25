@@ -46,10 +46,10 @@ var SetUserRoomName = function(socketId, world, roomName)
 	});
 }
 
-var SetUserRoom = function(world, socket, roomName)
+var SetUserRoom = function(world, socket, message, roomName)
 {
 	SetUserRoomName(socket.id, world, roomName);
-	socket.broadcast.emit("message color", world, "Somebody just entered the area...", roomName, "grey");
+	socket.broadcast.emit("message color", world, message, roomName, "grey");
 }
 
 //cards
@@ -119,7 +119,7 @@ io.on('connection', function(socket) {
 			break;
 
 			case "travel":
-				SetUserRoom(world, socket, room.name);
+				SetUserRoom(world, socket, command.metaData, room.name);
 			break;
 
 			case "roll":

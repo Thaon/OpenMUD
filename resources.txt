@@ -1,4 +1,15 @@
 {
+"world_name": "Default world",
+"world_description": "$w is just a platform to test new features, expect it to change frequently, $p",
+"server_rules": "if you can avoid bad words, that'd be great!",
+"players_speech_prefix": " > ",
+"login_message": "$p was just born into this world, rejoyce!",
+"login_error_message": "you already are logged in...",
+"logout_message": "somebody left us, the earth quivers",
+"enter_room_message": "you've reached $r",
+"other_player_enters_room_message": "somebody quietly entered the room",
+"cannot_travel_message": "sorry, there doesn't seem to be a path leading that way.",
+"finished_travelling_message": "your journey didn't last long.",
 "rooms": [
   {
     "name": "City Hall",

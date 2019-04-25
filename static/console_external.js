@@ -1,12 +1,23 @@
 YUI().use("node", function(Y) {
 
     //init
-    var serviceName = "test online console service";
+    var serviceName = "";
     var userName = "";
     var world = null;
     var rooms = null;
     var cards = null;
     var room = null;
+
+    //messages
+    var worldDescription = "";
+    var serverRules = "";
+    var sayMessage = "";
+    var loginMessage = "";
+    var logoutMessage = "";
+    var enterRoomMessage = "";
+    var otherPlayerEnterRoomMessage = "";
+    var cannotTravelMessage = "";
+    var finishedTravellingMessage = "";
 
     //online stuff
     var socket = null;
@@ -19,20 +30,33 @@ YUI().use("node", function(Y) {
 
         socket.on("send rooms", function(SrvRooms)
         {
+            //fetch messages
+            serviceName = ReplaceStringVariables(SrvRooms.world_name);
+            worldDescription = ReplaceStringVariables(SrvRooms.world_description);
+            serverRules = SrvRooms.server_rules;
+            sayMessage = ReplaceStringVariables(SrvRooms.players_speech_prefix);
+            loginMessage = ReplaceStringVariables(SrvRooms.login_message);
+            loginErrorMessage = ReplaceStringVariables(SrvRooms.login_error_message);
+            logoutMessage = ReplaceStringVariables(SrvRooms.logout_message);
+            enterRoomMessage = ReplaceStringVariables(SrvRooms.enter_room_message);
+            otherPlayerEnterRoomMessage = ReplaceStringVariables(SrvRooms.other_player_enters_room_message);
+            cannotTravelMessage = ReplaceStringVariables(SrvRooms.cannot_travel_message);
+            finishedTravellingMessage = ReplaceStringVariables(SrvRooms.finished_travelling_message);
+
             rooms = SrvRooms.rooms;
             cards = SrvRooms.cards;
             room = rooms[0];
-            outputToConsoleColor("You just entered " + room.name, "white");
+            outputToConsoleColor(enterRoomMessage);
         });
 
         socket.on('message', function(SrvWorld, Srvdata, SrvRoom) {
             if (SrvWorld == world && (SrvRoom == room.name || SrvRoom == "all"))
-                outputToConsole(Srvdata);
+                outputToConsole(sayMessage + Srvdata);
         });
 
         socket.on('message color', function(SrvWorld, Srvdata, SrvRoom, SrvColor) {
             if (SrvWorld == world && (SrvRoom == room.name || SrvRoom == "all"))
-                outputToConsoleColor(Srvdata, SrvColor);
+                outputToConsoleColor(sayMessage + Srvdata, SrvColor);
         });
 
         socket.on("break", function(SrvWorld, SrvRoom){
@@ -57,12 +81,14 @@ YUI().use("node", function(Y) {
                 {
                     world = args[0];
                     userName = args[1];
-                    outputToConsole("Hello " + userName + ", welcome to " + serviceName + ", the world is being loaded, please be patient.");
+                    var str;
+                    
+                    outputToConsole(loginMessage);
                     InitOnline();
                 }
                 else
                 {
-                    outputToConsoleColor("You can't login again, sorry...", "red");
+                    outputToConsoleColor(loginErrorMessage, "red");
                 }
             }
         },
@@ -82,6 +108,14 @@ YUI().use("node", function(Y) {
                         case "area":
                             socket.emit("command", {text: "describe area", metaData: null}, world, room);
                         break;
+
+                        case "world":
+                            outputToConsoleColor(worldDescription, "cyan");
+                        break;
+
+                        case "rules":
+                            outputToConsoleColor(serverRules, "cyan");
+                        break;
                     }
                 }
             }
@@ -98,7 +132,7 @@ YUI().use("node", function(Y) {
                 else
                 {
                     Travel(args[0]);
-                    socket.emit('command', {text: "travel", metaData: null}, world, room);
+                    socket.emit('command', {text: "travel", metaData: otherPlayerEnterRoomMessage}, world, room);
                 }
             }
         },
@@ -138,12 +172,14 @@ YUI().use("node", function(Y) {
         {
             name: "help",
             handler: function() {
-                outputToConsoleColor("Commands:", "cyan");
-                outputToConsoleColor("login + world ID + name, logs you into a world with the given name", "cyan");
-                outputToConsoleColor("travel + direction, travels in a direction", "cyan");
-                outputToConsoleColor("describe area, describes the area around you", "cyan");
-                outputToConsoleColor("roll + number, rolls a dice with that many faces", "cyan");
-                outputToConsoleColor("draw card, draws a card from the global deck for this world", "cyan");
+                outputToConsoleColor("Commands:", "gold");
+                outputToConsoleColor("login + world ID + name, logs you into a world with the given name", "gold");
+                outputToConsoleColor("travel + direction, travels in a direction", "gold");
+                outputToConsoleColor("describe world, describes the world you inhabit", "gold");
+                outputToConsoleColor("describe rules, describes the server rules, make sure you read them!", "gold");
+                outputToConsoleColor("describe area, describes the area around you", "gold");
+                outputToConsoleColor("roll + number, rolls a dice with that many faces", "gold");
+                outputToConsoleColor("draw card, draws a card from the global deck for this world", "gold");
             }
         }
     ];
@@ -206,12 +242,12 @@ YUI().use("node", function(Y) {
     {
         if (room[direction] == null)
         {
-            outputToConsoleColor("Unfortunately, there's nothing going " + direction + " from here.", "white");
+            outputToConsoleColor(cannotTravelMessage, "white");
             NewLine();
         }
         else
         {
-            outputToConsoleColor("Your journey is not too long.", "white");
+            outputToConsoleColor(finishedTravellingMessage, "white");
 
             rooms.forEach(function(tRoom)
             {
@@ -219,7 +255,7 @@ YUI().use("node", function(Y) {
                     room = tRoom;        
             });
             
-            outputToConsoleColor("You just entered " + room.name, "white");
+            outputToConsoleColor(enterRoomMessage, "white");
             NewLine();
         }
     }
@@ -251,4 +287,13 @@ YUI().use("node", function(Y) {
         NewLine();
     }
 
+
+    function ReplaceStringVariables(originalString)
+    {
+        var str = "";
+        str = originalString.replace("$p", userName);
+        str = originalString.replace("$w", serviceName);
+        str = originalString.replace("$r", room.name);
+        return str;
+    }
 });
