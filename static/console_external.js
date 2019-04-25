@@ -294,10 +294,10 @@ YUI().use("node", function(Y) {
 
     function ReplaceStringVariables(originalString)
     {
-        var str = "";
-        str = originalString.replace("$p", userName);
-        str = originalString.replace("$w", serviceName);
-        str = originalString.replace("$r", room.name);
+        var str = originalString;
+        str = str.replace("$p", userName);
+        str = str.replace("$w", serviceName);
+        str = str.replace("$r", room.name);
         return str;
     }
 });
