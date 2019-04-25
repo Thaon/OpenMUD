@@ -14,16 +14,16 @@ xmlns="http://www.w3.org/TR/REC-html40">
  <o:DocumentProperties>
   <o:Author>Gabriele Maddaloni</o:Author>
   <o:LastAuthor>Gabriele Maddaloni</o:LastAuthor>
-  <o:Revision>4</o:Revision>
-  <o:TotalTime>43</o:TotalTime>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>39</o:TotalTime>
   <o:Created>2019-04-25T05:39:00Z</o:Created>
-  <o:LastSaved>2019-04-25T05:43:00Z</o:LastSaved>
+  <o:LastSaved>2019-04-25T05:39:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
   <o:Words>330</o:Words>
-  <o:Characters>1883</o:Characters>
+  <o:Characters>1886</o:Characters>
   <o:Lines>15</o:Lines>
   <o:Paragraphs>4</o:Paragraphs>
-  <o:CharactersWithSpaces>2209</o:CharactersWithSpaces>
+  <o:CharactersWithSpaces>2212</o:CharactersWithSpaces>
   <o:Version>16.00</o:Version>
  </o:DocumentProperties>
  <o:OfficeDocumentSettings>
@@ -1636,14 +1636,14 @@ mso-bidi-font-size:10.5pt;line-height:125%;font-family:"Abadi",sans-serif'>Hello
 everybody and thanks for visiting this page!<o:p></o:p></span></span></p>
 
 <p class=MsoNormal><span style='font-size:12.0pt;mso-bidi-font-size:10.5pt;
-line-height:125%;font-family:"Abadi",sans-serif'>I am Gabe, CTO at Deep Fried
+line-height:125%;font-family:"Abadi",sans-serif'>I’m Gabe, CTO at Deep Fried
 Games and lecturer at the Hunan University for arts and science in <span
 class=SpellE>Changde</span>, China.</span></p>
 
 <p class=MsoNormal><span style='font-size:12.0pt;mso-bidi-font-size:10.5pt;
-line-height:125%;font-family:"Abadi",sans-serif'>I have been a fan of MUDs
-since I was young and I have played countless hours of D&amp;D, now that I am
-able to code decently, I wanted to give a stab at this genre.<o:p></o:p></span></p>
+line-height:125%;font-family:"Abadi",sans-serif'>I’ve been a fan of MUDs since I
+was young and I have played countless hours of D&amp;D, now that I am able to
+code decently, I thought I’d give a stab at this genre.<o:p></o:p></span></p>
 
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
 
@@ -1743,9 +1743,8 @@ and login into your world!<o:p></o:p></span></p>
 
 <p class=MsoNormal><span style='font-size:12.0pt;mso-bidi-font-size:10.5pt;
 line-height:125%;font-family:"Abadi",sans-serif'>To do that, they <span
-class=GramE>have to</span> type <b style='mso-bidi-font-weight:normal'>login</b>
-+ the <b style='mso-bidi-font-weight:normal'>ID of your world</b> + their <b
-style='mso-bidi-font-weight:normal'>chosen name</b>.<o:p></o:p></span></p>
+class=GramE>have to</span> type “login” + the ID of your world + their chosen
+name.<o:p></o:p></span></p>
 
 <p class=MsoNormal><span style='font-size:11.0pt;mso-bidi-font-size:10.5pt;
 line-height:125%;font-family:"Abadi",sans-serif'>The ID of your world is the ID
@@ -1776,10 +1775,9 @@ normal;mso-bidi-font-style:italic'><o:p>&nbsp;</o:p></span></em></p>
 <p class=MsoNormal><em><span style='font-size:12.0pt;mso-bidi-font-size:10.5pt;
 line-height:125%;font-family:"Abadi",sans-serif;color:windowtext;font-style:
 normal;mso-bidi-font-style:italic'>Note that since <span class=SpellE>OpenMud</span>
-is trying to be a <b style='mso-bidi-font-weight:normal'>one size fits all</b>
-kind of tool, a lot of specialized functionalities are not implemented, I am
-open to suggestions though, so feel free to message me on reddit at <span
-class=SpellE><b style='mso-bidi-font-weight:normal'>DeepFriedGabe</b></span>!<o:p></o:p></span></em></p>
+is trying to be a “one size fits all” kind of tool, a lot of specialized
+functionalities are not implemented, I am open to suggestions though, so feel
+free to message me on reddit at <span class=SpellE>DeepFriedGabe</span>!<o:p></o:p></span></em></p>
 
 </div>
 
