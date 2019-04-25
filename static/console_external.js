@@ -46,6 +46,7 @@ YUI().use("node", function(Y) {
             rooms = SrvRooms.rooms;
             cards = SrvRooms.cards;
             room = rooms[0];
+            outputToConsole(loginMessage);
             outputToConsoleColor(enterRoomMessage);
         });
 
@@ -83,7 +84,7 @@ YUI().use("node", function(Y) {
                     userName = args[1];
                     var str;
                     
-                    outputToConsole(loginMessage);
+                    outputToConsole("Logging in, please be patient.");
                     InitOnline();
                 }
                 else
