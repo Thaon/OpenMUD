@@ -77,6 +77,15 @@ YUI().use("node", function(Y) {
         socket.on("room description", function(users){
             DescribeRoom(users);
         });
+
+        socket.on("user logout", function(userName, tWorld){
+            if (tWorld == world)
+            {
+                msg = logoutMessage.replace(userName, "$p");
+                msg = ReplaceStringVariables(msg);
+                outputToConsoleColor(msg, "darkred");
+            }
+        });
     }
     
     

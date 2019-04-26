@@ -151,12 +151,11 @@ io.on('connection', function(socket) {
 		DescribeWolrds(socket);
 	});
 
-	socket.on('disconnect', function(world){
-		console.log("Somebody disconnected: " + socket.id + " in world: " + world);
+	socket.on('disconnect', function(){
 		var tUser = null;
 		users.forEach(function(element)
 	    {
-	    	if (element.world == world && element.id == socket.id)
+	    	if (element.id == socket.id)
 	    	{
 	    		tUser = element;
 	    	}
@@ -167,17 +166,17 @@ io.on('connection', function(socket) {
 	    	return;
 	    }
 
-		var disconnectedUser = tUser.name;
+		console.log(tUser.name + " disconnected: " + socket.id + " in world: " + tUser.world);
+		io.sockets.emit('user logout', tUser.world);
 		users.pop(tUser);
-		io.sockets.emit('message color', world, disconnectedUser + " just left this world, what a pity", "all", "darkred");
 
 		//debug
-	    console.clear();
-	    console.log("now the following users are connected:");
-	    users.forEach(function(element)
-	    {
-	    	console.log(element.name + " - " + element.id);
-	    });
+	    // console.clear();
+	    // console.log("now the following users are connected:");
+	    // users.forEach(function(element)
+	    // {
+	    // 	console.log(element.name + " - " + element.id);
+	    // });
 	});
 });
 
