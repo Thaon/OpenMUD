@@ -11,8 +11,6 @@
 "cannot_travel_message": "Sorry, there doesn't seem to be a path leading that way.",
 "finished_travelling_message": "Your journey didn't last long.",
 "rooms_not_loaded_message":"Rooms have not been loaded, if you've been waiting a lot, there might be an error :/",
-"logging_in_message":"Logging in, please be patient.",
-"login_error_message":"You need to login first",
 "rooms": [
   {
     "name": "City Hall",
