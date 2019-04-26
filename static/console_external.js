@@ -21,9 +21,9 @@ YUI().use("node", function(Y) {
     var otherPlayerEnterRoomMessage = "";
     var cannotTravelMessage = "";
     var finishedTravellingMessage = "";
-    var roomsNotLoadedMessage = "Rooms have not been loaded, if you've been waiting a lot, there might be an error :/";
-    var loggingInMessage = "Logging in, please be patient.";
-    var loginErrorMessage = "you need to login first";
+    var roomsNotLoadedMessage = "";
+    var loggingInMessage = "";
+    var loginErrorMessage = "";
 
     //online stuff
     var socket = null;
