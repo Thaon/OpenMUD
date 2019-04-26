@@ -1,5 +1,8 @@
 YUI().use("node", function(Y) {
 
+    pastInputs = [];
+    pastInputsCounter = 0;
+
     //init
     var serviceName = "";
     var userName = "";
@@ -191,6 +194,14 @@ YUI().use("node", function(Y) {
     function processCommand() {
         var inField = Y.one("#in");
         var input = inField.get("value");
+
+        //commands backlog
+        pastInputs.push(input);
+        if (pastInputs.length > 100)
+            pastInputs.shift();
+        pastInputsCounter = pastInputs.length;4
+        console.log(pastInputs);
+
         var parts = input.replace(/\s+/g, " ").split(" ");
         var command = parts[0];
         var args = parts.length > 1 ? parts.slice(1, parts.length) : [];
@@ -233,8 +244,25 @@ YUI().use("node", function(Y) {
     Y.on("domready", function(e) {
         Y.one("body").setStyle("paddingBottom", Y.one("#in").get("offsetHeight"));
         Y.one("#in").on("keydown", function(e) {
+
             if (e.charCode === 13) {
                 processCommand();
+            }
+
+            if (e.charCode === 38) {
+                if (pastInputsCounter > 0)
+                {
+                    pastInputsCounter--;
+                    Y.one("#in").set("value", pastInputs[pastInputsCounter]);
+                }
+            }
+
+            if (e.charCode === 40) {
+                if (pastInputsCounter < pastInputs.length - 1)
+                {
+                    pastInputsCounter++;
+                    Y.one("#in").set("value", pastInputs[pastInputsCounter]);
+                }
             }
         });
     });
