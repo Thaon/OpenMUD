@@ -21,6 +21,9 @@ YUI().use("node", function(Y) {
     var otherPlayerEnterRoomMessage = "";
     var cannotTravelMessage = "";
     var finishedTravellingMessage = "";
+    var roomsNotLoadedMessage = "Rooms have not been loaded, if you've been waiting a lot, there might be an error :/";
+    var loggingInMessage = "Logging in, please be patient.";
+    var loginErrorMessage = "you need to login first";
 
     //online stuff
     var socket = null;
@@ -48,6 +51,10 @@ YUI().use("node", function(Y) {
             otherPlayerEnterRoomMessage = ReplaceStringVariables(SrvRooms.other_player_enters_room_message);
             cannotTravelMessage = ReplaceStringVariables(SrvRooms.cannot_travel_message);
             finishedTravellingMessage = ReplaceStringVariables(SrvRooms.finished_travelling_message);
+            roomsNotLoadedMessage = SrvRooms.rooms_not_loaded_message;
+            loggingInMessage = SrvRooms.logging_in_message;
+            loginErrorMessage = SrvRooms.login_error_message;
+
 
             //notify player
             outputToConsole(loginMessage);
@@ -88,7 +95,7 @@ YUI().use("node", function(Y) {
                     userName = args[1];
                     var str;
                     
-                    outputToConsole("Logging in, please be patient.");
+                    outputToConsole(loggingInMessage);
                     InitOnline();
                 }
                 else
@@ -104,7 +111,7 @@ YUI().use("node", function(Y) {
             {
                 if (rooms == null)
                 {
-                    outputToConsole("Rooms have not been loaded, if you've been waiting a lot, there might be an error :/");
+                    outputToConsole(roomsNotLoadedMessage);
                 }
                 else
                 {
@@ -132,7 +139,7 @@ YUI().use("node", function(Y) {
             {
                 if (rooms == null)
                 {
-                    outputToConsole("Rooms have not been loaded, if you've been waiting a lot, there might be an error :/");
+                    outputToConsole(roomsNotLoadedMessage);
                 }
                 else
                 {
@@ -148,7 +155,7 @@ YUI().use("node", function(Y) {
             {
                 if (rooms == null)
                 {
-                    outputToConsole("Rooms have not been loaded, if you've been waiting a lot, there might be an error :/");
+                    outputToConsole(roomsNotLoadedMessage);
                 }
                 else
                 {
@@ -164,7 +171,7 @@ YUI().use("node", function(Y) {
             {
                 if (rooms == null)
                 {
-                    outputToConsole("Rooms have not been loaded, if you've been waiting a lot, there might be an error :/");
+                    outputToConsole(roomsNotLoadedMessage);
                 }
                 else
                 {
@@ -180,7 +187,7 @@ YUI().use("node", function(Y) {
             {
                 if (rooms == null)
                 {
-                    outputToConsole("Rooms have not been loaded, if you've been waiting a lot, there might be an error :/");
+                    outputToConsole(roomsNotLoadedMessage);
                 }
                 else
                 {
@@ -191,7 +198,7 @@ YUI().use("node", function(Y) {
         },
 
         {
-            name: "help",
+            name: "commands",
             handler: function() {
                 outputToConsoleColor("Commands:", "gold");
                 outputToConsoleColor("login + world ID + name, logs you into a world with the given name", "gold");
@@ -231,7 +238,7 @@ YUI().use("node", function(Y) {
         if (userName != "")
             socket.emit('message', input, world, room.name);
         else
-            outputToConsole("you need to login first");
+            outputToConsole(loginErrorMessage);
 
     }
 
@@ -289,7 +296,6 @@ YUI().use("node", function(Y) {
             }
         });
 
-        outputToConsoleColor("Available worlds:");
         socket.emit("describe worlds");
     });
 
@@ -327,20 +333,23 @@ YUI().use("node", function(Y) {
         outputToConsoleColor(room.description, "white");
         
         if (room.north != null)
-            outputToConsoleColor("North of this is " + room.north, "white");
+            outputToConsoleColor("North: " + room.north, "white");
 
         if (room.south != null)
-            outputToConsoleColor("South of this is " + room.south, "white");
+            outputToConsoleColor("South: " + room.south, "white");
 
         if (room.west != null)
-            outputToConsoleColor("West of this is " + room.west, "white");
+            outputToConsoleColor("West: " + room.west, "white");
 
         if (room.east != null)
-            outputToConsoleColor("East of this is " + room.east, "white");
+            outputToConsoleColor("East: " + room.east, "white");
+
+        usersInRoom = "";
 
         users.forEach(function(user){
-            outputToConsoleColor(user.name + " is here.", "purple");
+            usersInRoom += "{" + user.name + "} ";
         });
+        outputToConsoleColor(usersInRoom, "purple");
 
         NewLine();
     }
