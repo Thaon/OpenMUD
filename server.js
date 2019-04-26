@@ -26,6 +26,20 @@ server.listen(PORT, function() {
 //server specific code
 var users = [];
 
+function DescribeWolrds(socket)
+{
+	var worlds = [];
+
+	for (var i = users.length - 1; i >= 0; i--) {
+		if(!worlds.includes(users[i].world))
+		{
+			worlds.push(users[i].world);
+		}
+	}
+
+	socket.emit("worlds description", worlds);
+}
+
 function DescribeRoom(world, room, socket)
 {
 	tUsers = [];
@@ -131,6 +145,10 @@ io.on('connection', function(socket) {
 				DrawCard(socket, command.metaData[0], command.metaData[1], world, room);
 			break;
 		}
+	});
+
+	socket.on("describe worlds", function(){
+		DescribeWolrds(socket);
 	});
 
 	socket.on('disconnect', function(world){

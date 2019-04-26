@@ -27,8 +27,6 @@ YUI().use("node", function(Y) {
 
     var InitOnline = function()
     {
-        socket = io();
-        
         socket.emit('new user', userName, world);
 
         socket.on("send rooms", function(SrvRooms)
@@ -73,7 +71,7 @@ YUI().use("node", function(Y) {
 
         socket.on("room description", function(users){
             DescribeRoom(users);
-        })
+        });
     }
     
     
@@ -177,6 +175,22 @@ YUI().use("node", function(Y) {
         },
 
         {
+            name: "worlds",
+            handler: function(args)
+            {
+                if (rooms == null)
+                {
+                    outputToConsole("Rooms have not been loaded, if you've been waiting a lot, there might be an error :/");
+                }
+                else
+                {
+                    var number = args[0];
+                    socket.emit('command', {text: "roll", metaData: [userName, number]}, world, room.name);
+                }
+            }
+        },
+
+        {
             name: "help",
             handler: function() {
                 outputToConsoleColor("Commands:", "gold");
@@ -200,7 +214,6 @@ YUI().use("node", function(Y) {
         if (pastInputs.length > 100)
             pastInputs.shift();
         pastInputsCounter = pastInputs.length;4
-        console.log(pastInputs);
 
         var parts = input.replace(/\s+/g, " ").split(" ");
         var command = parts[0];
@@ -265,6 +278,19 @@ YUI().use("node", function(Y) {
                 }
             }
         });
+
+        //get worlds list
+        socket = io();
+
+        socket.on("worlds description", function(worlds)
+        {
+            for (var i = worlds.length - 1; i >= 0; i--) {
+                outputToConsoleColor(worlds[i], "gold");
+            }
+        });
+
+        outputToConsoleColor("Available worlds:");
+        socket.emit("describe worlds");
     });
 
 
