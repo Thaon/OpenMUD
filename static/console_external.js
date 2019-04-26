@@ -22,8 +22,8 @@ YUI().use("node", function(Y) {
     var cannotTravelMessage = "";
     var finishedTravellingMessage = "";
     var roomsNotLoadedMessage = "";
-    var loggingInMessage = "";
-    var loginErrorMessage = "";
+    var loggingInMessage = "Loading World.";
+    var loginErrorMessage = "Login first, please.";
 
     //online stuff
     var socket = null;
@@ -52,8 +52,6 @@ YUI().use("node", function(Y) {
             cannotTravelMessage = ReplaceStringVariables(SrvRooms.cannot_travel_message);
             finishedTravellingMessage = ReplaceStringVariables(SrvRooms.finished_travelling_message);
             roomsNotLoadedMessage = SrvRooms.rooms_not_loaded_message;
-            loggingInMessage = SrvRooms.logging_in_message;
-            loginErrorMessage = SrvRooms.login_error_message;
 
 
             //notify player
